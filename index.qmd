@@ -4,5 +4,12 @@
 import seaborn as sns
 
 df = sns.load_dataset('penguins')
+```
+
+```{python}
 df.head()
+```
+
+```{python}
+df.tail()
 ```
