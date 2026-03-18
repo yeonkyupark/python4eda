@@ -1,0 +1,22 @@
+project:
+  type: book
+
+book:
+  title: "EDA for Python"
+  date: last-modified
+  repo-url: https://github.com/yeonkyupark/python4eda 
+  repo-branch: main
+  repo-actions: [edit]
+  chapters:
+    - index.qmd
+
+format:
+  html:
+    theme:
+      - cosmo
+      - brand
+
+execute:
+  freeze: auto
+
+jupyter: python3
