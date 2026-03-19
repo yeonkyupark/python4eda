@@ -2,7 +2,7 @@ project:
   type: book
 
 book:
-  title: "EDA for Python"
+  title: "파이썬을 이용한 데이터 분석"
   date: last-modified
   repo-url: https://github.com/yeonkyupark/python4eda 
   repo-branch: main
