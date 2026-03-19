@@ -9,6 +9,17 @@
 ### 빈도 분석
 
 ```{python}
+# 패키지 및 데이터 적재
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+df = sns.load_dataset("penguins")
+df_raw = df.copy()
+```
+
+```{python}
 # 절대 빈도
 print("── species 분포 ─────────────")
 print(df["species"].value_counts())

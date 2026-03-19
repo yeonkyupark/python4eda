@@ -11,6 +11,16 @@
 ## 범주형 × 수치형 분석
 
 ### Boxplot — 그룹별 분포 비교
+```{python}
+# 패키지 및 데이터 적재
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+df = sns.load_dataset("penguins")
+df_raw = df.copy()
+```
 
 ```{python}
 fig, axes = plt.subplots(1, 2, figsize=(14, 5))

@@ -7,6 +7,17 @@
 ### 결측치 현황 정량화
 
 ```{python}
+# 패키지 및 데이터 적재
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+df = sns.load_dataset("penguins")
+df_raw = df.copy()
+```
+
+```{python}
 # 컬럼별 결측치 개수 및 비율
 missing_count = df.isnull().sum()
 missing_ratio = (df.isnull().sum() / len(df)) * 100

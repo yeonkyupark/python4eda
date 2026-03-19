@@ -5,6 +5,11 @@
 ### seaborn 내장 데이터셋 사용
 
 ```{python}
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+import seaborn as sns
+
 # seaborn 내장 penguins 데이터셋 로드
 df = sns.load_dataset("penguins")
 
