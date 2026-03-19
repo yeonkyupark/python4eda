@@ -23,7 +23,7 @@ df = setup_all()
 ```
 
 ```{python}
-fig, axes = plt.subplots(2, 1, figsize=(8, 12))
+fig, axes = plt.subplots(2, 1, figsize=(7, 10))
 
 # 종별 부리 길이
 sns.boxplot(data=df, x="species", y="bill_length_mm",
@@ -67,7 +67,7 @@ print(group_stats)
 ### Scatter Plot — 두 변수의 관계
 
 ```{python}
-fig, axes = plt.subplots(2, 1, figsize=(8, 12))
+fig, axes = plt.subplots(2, 1, figsize=(7, 10))
 
 # 부리 길이 vs 깊이 (종별 색상)
 sns.scatterplot(data=df, x="bill_length_mm", y="bill_depth_mm",
@@ -91,7 +91,6 @@ corr = df[numeric_cols].corr()
 print(corr.round(3))
 
 # 히트맵 시각화
-plt.figure(figsize=(8, 6))
 mask = np.triu(np.ones_like(corr, dtype=bool))  # 상삼각 마스크 (중복 제거)
 sns.heatmap(corr, annot=True, fmt=".2f", cmap="coolwarm",
             mask=mask, vmin=-1, vmax=1,
@@ -122,7 +121,7 @@ print("\n── 비율 교차표 (행 기준) ─────")
 print(ct_ratio.round(3))
 
 # 시각화
-fig, axes = plt.subplots(2, 1, figsize=(8, 12))
+fig, axes = plt.subplots(2, 1, figsize=(7, 10))
 
 ct.plot(kind="bar", stacked=True, ax=axes[0], colormap="Set2")
 axes[0].set_title("Species × Island (누적 막대)")
@@ -148,13 +147,13 @@ g = sns.pairplot(
     diag_kind="kde",
     plot_kws={"alpha": 0.6}
 )
-
+g.fig.set_size_inches(7, 8)
 g.fig.suptitle("Pairplot (종별 색상)", y=1.02)
 
 # legend 재구성
 if g._legend is not None:
     g._legend.remove()
-    
+
 g.add_legend(
     title="species",
     bbox_to_anchor=(0.5, -0.02),
