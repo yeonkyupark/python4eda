@@ -1,0 +1,103 @@
+# Ch.04 단변량 분석 (Univariate)
+
+> **단변량 분석의 목적**  
+> 각 변수를 독립적으로 살펴보며 **어떤 값들이 얼마나 많이 있는지(분포)** 를 파악합니다.  
+> 이상치 추가 확인, 왜도·첨도로 정규성 판단, 데이터 불균형 발견이 주요 목적입니다.
+
+## 범주형 변수 분석
+
+### 빈도 분석
+
+```python
+# 절대 빈도
+print("── species 분포 ─────────────")
+print(df["species"].value_counts())
+
+# 상대 빈도 (비율)
+print("\n── species 비율 ─────────────")
+print(df["species"].value_counts(normalize=True).round(3))
+
+# 모든 범주형 변수 한 번에 확인
+for col in ["species", "island", "sex"]:
+    print(f"\n[{col}]")
+    print(df[col].value_counts())
+```
+
+### Count Plot
+
+```python
+fig, axes = plt.subplots(1, 3, figsize=(14, 4))
+
+cat_cols = ["species", "island", "sex"]
+for ax, col in zip(axes, cat_cols):
+    sns.countplot(data=df, x=col, ax=ax, palette="Blues_d")
+    ax.set_title(f"{col} 분포")
+    # 막대 위 개수 표시
+    for p in ax.patches:
+        ax.annotate(f'{int(p.get_height())}',
+                    (p.get_x() + p.get_width()/2, p.get_height()),
+                    ha='center', va='bottom', fontsize=10)
+
+plt.tight_layout()
+plt.show()
+```
+
+### 섬별 종 분포 비교 (hue 옵션)
+
+```python
+plt.figure(figsize=(8, 4))
+sns.countplot(data=df, x="island", hue="species", palette="Set2")
+plt.title("섬별 종 분포")
+plt.legend(title="species")
+plt.show()
+```
+
+---
+
+## 수치형 변수 분석
+
+### 기술 통계
+
+```python
+numeric_cols = ["bill_length_mm", "bill_depth_mm", "flipper_length_mm", "body_mass_g"]
+print(df[numeric_cols].describe().T)   # .T 로 전치하면 보기 편함
+```
+
+### 히스토그램 + KDE
+
+```python
+fig, axes = plt.subplots(2, 2, figsize=(12, 8))
+axes = axes.flatten()
+
+for i, col in enumerate(numeric_cols):
+    sns.histplot(df[col].dropna(), kde=True, ax=axes[i], color="steelblue")
+    axes[i].set_title(col)
+    axes[i].set_xlabel("")
+
+plt.suptitle("수치형 변수 분포", y=1.01, fontsize=13)
+plt.tight_layout()
+plt.show()
+```
+
+### 왜도(Skewness)와 첨도(Kurtosis)
+
+> **왜도·첨도 해석 기준**  
+> - **왜도**: 0이면 대칭, +이면 오른쪽 꼬리(양의 왜도), -이면 왼쪽 꼬리. |왜도| > 1이면 변환 고려  
+> - **첨도**: 0이면 정규분포, +이면 뾰족(이상치 가능), -이면 평평한 분포
+
+```python
+print(f"{'컬럼':<22} {'왜도':>8} {'첨도':>8}")
+print("-" * 40)
+for col in numeric_cols:
+    skew = df[col].skew()
+    kurt = df[col].kurtosis()
+    flag = "변환검토" if abs(skew) > 1 else ""
+    print(f"{col:<22} {skew:>8.3f} {kurt:>8.3f} {flag}")
+```
+
+> **Ch.04 핵심 인사이트**
+> - species 불균형 존재 → 이후 모델 학습 시 class imbalance 고려 필요
+> - 수치형 변수 대부분 **다봉형 분포** → 종(species)별 특성 차이 때문
+> - 단변량 분석에서 "종에 따라 값이 달라진다"는 핵심 직관 확보
+
+---

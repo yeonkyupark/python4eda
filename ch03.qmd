@@ -1,0 +1,164 @@
+# Ch.03 데이터 품질 점검
+
+## 결측치(Missing Value) 분석
+
+결측치는 분석 결과를 왜곡하고 머신러닝 모델 오류를 유발합니다. 개수와 비율을 함께 확인하고 처리 전략을 선택합니다.
+
+### 결측치 현황 정량화
+
+```python
+# 컬럼별 결측치 개수 및 비율
+missing_count = df.isnull().sum()
+missing_ratio = (df.isnull().sum() / len(df)) * 100
+
+missing_df = pd.DataFrame({
+    "결측 개수": missing_count,
+    "결측 비율(%)": missing_ratio.round(2)
+})
+
+# 결측치가 있는 컬럼만 표시
+print(missing_df[missing_df["결측 개수"] > 0])
+```
+
+### 결측치 시각화
+
+```python
+# 히트맵: 밝은 색 = 결측치
+plt.figure(figsize=(8, 4))
+sns.heatmap(df.isnull(), cbar=False, yticklabels=False)
+plt.title("결측치 분포 (밝은 색 = NaN)")
+plt.tight_layout()
+plt.show()
+```
+
+---
+
+## 결측치 처리 전략 선택
+
+| 전략 | 적합한 상황 | 방법 |
+|------|-------------|------|
+| 단순 제거 | 결측 비율 5% 이하, 무작위 결측, 데이터 충분 | `dropna()` |
+| 통계값 대체 | 수치형(평균/중앙값), 범주형(최빈값) | `fillna()` |
+| 그룹 기반 대체 | 그룹별 특성이 다를 때 (가장 정확) | `groupby().transform()` |
+
+```python
+# 단순 제거
+df_drop = df.dropna()
+print(f"제거 전: {df.shape} → 제거 후: {df_drop.shape}")
+
+# 중앙값 대체 (수치형)
+df_fill = df.copy()
+for col in ["bill_length_mm", "bill_depth_mm", "flipper_length_mm", "body_mass_g"]:
+    df_fill[col] = df_fill[col].fillna(df_fill[col].median())
+
+# 최빈값 대체 (범주형)
+df_fill["sex"] = df_fill["sex"].fillna(df_fill["sex"].mode()[0])
+
+# 그룹 기반 대체 (종별 평균)
+df_group = df.copy()
+df_group["bill_length_mm"] = df.groupby("species")["bill_length_mm"]\
+                               .transform(lambda x: x.fillna(x.mean()))
+```
+
+---
+
+## 이상치(Outlier) 탐색 및 처리
+
+이상치는 다른 데이터와 크게 벗어난 값입니다. 실제 극단값일 수도 있고, 입력 오류일 수도 있어 **맥락을 고려한 판단**이 필요합니다.
+
+### Boxplot으로 이상치 시각화
+
+```python
+numeric_cols = ["bill_length_mm", "bill_depth_mm", "flipper_length_mm", "body_mass_g"]
+
+plt.figure(figsize=(12, 6))
+for i, col in enumerate(numeric_cols):
+    plt.subplot(2, 2, i+1)
+    sns.boxplot(x=df[col], color="skyblue")
+    plt.title(f"{col}\n(박스 바깥 = 이상치 후보)")
+
+plt.tight_layout()
+plt.show()
+```
+
+> **IQR 방식 이해**  
+> IQR = Q3(75분위) - Q1(25분위)  
+> - 하한: Q1 - 1.5 × IQR 미만  
+> - 상한: Q3 + 1.5 × IQR 초과  
+> Boxplot의 수염(whisker) 바깥에 표시되는 점들이 이상치 후보입니다.
+
+### IQR 기반 이상치 탐지 함수
+
+```python
+def detect_outliers_iqr(data, column):
+    """IQR 방법으로 이상치를 탐지하는 함수"""
+    Q1 = data[column].quantile(0.25)
+    Q3 = data[column].quantile(0.75)
+    IQR = Q3 - Q1
+
+    lower = Q1 - 1.5 * IQR
+    upper = Q3 + 1.5 * IQR
+
+    outliers = data[(data[column] < lower) | (data[column] > upper)]
+    print(f"[{column}] 하한: {lower:.2f}, 상한: {upper:.2f}, 이상치 수: {len(outliers)}")
+    return outliers
+
+# 전체 수치형 컬럼 적용
+for col in numeric_cols:
+    detect_outliers_iqr(df, col)
+```
+
+### 이상치 처리 방법
+
+| 방법 | 적합한 상황 | 특징 |
+|------|-------------|------|
+| 제거 | 입력 오류 확인, 소수의 이상치 | 데이터 손실 주의 |
+| 클리핑 | 경계값으로 제한 | 데이터 손실 없음, 실무에서 많이 사용 |
+| 변환 | log 변환으로 왜도 보정 | 해석이 복잡해짐 |
+
+```python
+# 제거
+def remove_outliers_iqr(data, column):
+    Q1 = data[column].quantile(0.25)
+    Q3 = data[column].quantile(0.75)
+    IQR = Q3 - Q1
+    lower = Q1 - 1.5 * IQR
+    upper = Q3 + 1.5 * IQR
+    return data[(data[column] >= lower) & (data[column] <= upper)]
+
+df_clean = remove_outliers_iqr(df, "bill_length_mm")
+
+# 클리핑 (경계값으로 대체)
+df_clip = df.copy()
+for col in numeric_cols:
+    Q1 = df[col].quantile(0.25)
+    Q3 = df[col].quantile(0.75)
+    IQR = Q3 - Q1
+    df_clip[col] = df[col].clip(Q1 - 1.5*IQR, Q3 + 1.5*IQR)
+```
+
+---
+
+## 데이터 타입 변환 및 중복 제거
+
+```python
+# ── 범주형 변환 (메모리 절약 + 분석 편의)
+for col in ["species", "island", "sex"]:
+    df[col] = df[col].astype("category")
+
+# ── 수치형 강제 변환 (오류값 NaN으로 처리)
+df["body_mass_g"] = pd.to_numeric(df["body_mass_g"], errors="coerce")
+
+# ── 중복 제거
+print(f"중복 행 수: {df.duplicated().sum()}")
+df_no_dup = df.drop_duplicates()
+print(f"중복 제거 후: {df_no_dup.shape}")
+```
+
+> **Ch.03 핵심 요약**
+> - 결측치는 비율에 따라 제거 또는 대체 전략을 선택 (5% 기준 참고)
+> - 이상치는 IQR 방법으로 자동 탐지 → 맥락 파악 후 처리 결정
+> - 범주형 컬럼은 `category` 타입으로 변환하여 분석 효율 향상
+> - 전처리 후에도 원본 `df_raw`는 항상 보존
+
+---

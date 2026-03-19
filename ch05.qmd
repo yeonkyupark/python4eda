@@ -1,0 +1,146 @@
+# Ch.05 이변량 분석 (Bivariate)
+
+두 변수 간의 관계를 변수 유형 조합에 따라 적합한 방법으로 분석합니다.
+
+| 조합 | 주요 시각화 | 주요 통계량 |
+|------|-------------|-------------|
+| 범주형 × 수치형 | Boxplot, Violin Plot, Bar | 그룹별 평균/중앙값 |
+| 수치형 × 수치형 | Scatter Plot, Heatmap | 상관계수 (Pearson) |
+| 범주형 × 범주형 | Stacked Bar, Heatmap | 교차표 (Crosstab) |
+
+## 범주형 × 수치형 분석
+
+### Boxplot — 그룹별 분포 비교
+
+```python
+fig, axes = plt.subplots(1, 2, figsize=(14, 5))
+
+# 종별 부리 길이
+sns.boxplot(data=df, x="species", y="bill_length_mm",
+            palette="Set2", ax=axes[0])
+axes[0].set_title("Species별 bill_length 분포")
+
+# 성별 체중
+sns.boxplot(data=df, x="sex", y="body_mass_g",
+            hue="species", palette="Set1", ax=axes[1])
+axes[1].set_title("성별·종별 체중 분포")
+
+plt.tight_layout()
+plt.show()
+```
+
+### Violin Plot — 분포 형태까지 파악
+
+```python
+plt.figure(figsize=(8, 5))
+sns.violinplot(data=df, x="species", y="flipper_length_mm",
+               palette="muted", inner="box")
+plt.title("Species별 flipper_length 분포 (Violin)")
+plt.show()
+
+# inner="box"는 바이올린 안에 boxplot을 함께 표시
+```
+
+### 그룹별 평균 비교
+
+```python
+# 종별 수치형 변수 평균 비교
+group_stats = df.groupby("species")[numeric_cols].agg(["mean", "std"]).round(2)
+print(group_stats)
+```
+
+---
+
+## 수치형 × 수치형 분석
+
+### Scatter Plot — 두 변수의 관계
+
+```python
+fig, axes = plt.subplots(1, 2, figsize=(14, 5))
+
+# 부리 길이 vs 깊이 (종별 색상)
+sns.scatterplot(data=df, x="bill_length_mm", y="bill_depth_mm",
+                hue="species", ax=axes[0], palette="Set2", alpha=0.8)
+axes[0].set_title("부리 길이 vs 깊이 (종별)")
+
+# 지느러미 길이 vs 체중
+sns.scatterplot(data=df, x="flipper_length_mm", y="body_mass_g",
+                hue="species", ax=axes[1], palette="Set2", alpha=0.8)
+axes[1].set_title("지느러미 길이 vs 체중 (종별)")
+
+plt.tight_layout()
+plt.show()
+```
+
+### 상관관계 분석 & Heatmap
+
+```python
+# 피어슨 상관계수
+corr = df[numeric_cols].corr()
+print(corr.round(3))
+
+# 히트맵 시각화
+plt.figure(figsize=(7, 5))
+mask = np.triu(np.ones_like(corr, dtype=bool))  # 상삼각 마스크 (중복 제거)
+sns.heatmap(corr, annot=True, fmt=".2f", cmap="coolwarm",
+            mask=mask, vmin=-1, vmax=1,
+            square=True, linewidths=0.5)
+plt.title("수치형 변수 간 상관관계")
+plt.tight_layout()
+plt.show()
+```
+
+> **상관계수 해석 주의**  
+> 상관계수는 **선형 관계만** 측정합니다. r=0이어도 비선형 관계가 있을 수 있습니다.  
+> 또한 심슨의 역설처럼 전체 상관과 그룹별 상관이 다를 수 있으므로 hue 옵션으로 그룹별 확인을 병행하세요.
+
+---
+
+## 범주형 × 범주형 분석
+
+```python
+# 교차표 (빈도)
+ct = pd.crosstab(df["species"], df["island"])
+print("── 빈도 교차표 ──────────────")
+print(ct)
+
+# 행 기준 비율
+ct_ratio = pd.crosstab(df["species"], df["island"], normalize="index")
+print("\n── 비율 교차표 (행 기준) ─────")
+print(ct_ratio.round(3))
+
+# 시각화
+fig, axes = plt.subplots(1, 2, figsize=(14, 5))
+
+ct.plot(kind="bar", stacked=True, ax=axes[0], colormap="Set2")
+axes[0].set_title("Species × Island (누적 막대)")
+axes[0].set_xticklabels(axes[0].get_xticklabels(), rotation=0)
+
+sns.heatmap(ct, annot=True, fmt="d", cmap="Blues", ax=axes[1])
+axes[1].set_title("Species × Island (히트맵)")
+
+plt.tight_layout()
+plt.show()
+```
+
+---
+
+## Pairplot — 전체 이변량 관계 한 눈에
+
+```python
+# 모든 수치형 변수 쌍의 관계를 한 번에 시각화
+# 데이터 크기에 따라 시간이 걸릴 수 있음
+sns.pairplot(df, hue="species", palette="Set2",
+             diag_kind="kde",       # 대각선: KDE 밀도
+             plot_kws={"alpha": 0.6})
+plt.suptitle("Pairplot (종별 색상)", y=1.02)
+plt.show()
+```
+
+> **Ch.05 핵심 인사이트**
+> - 종(species) 기준으로 수치형 변수 값이 명확히 구분 → 분류 모델에 매우 유리
+> - **flipper_length ↔ body_mass** 강한 양의 상관관계 존재 (r≈0.87)
+> - **bill_length ↔ bill_depth**는 전체적으로 약한 음의 상관 → 종별로 나누면 역전 (심슨의 역설)
+> - island 변수만으로도 species를 예측 가능한 구조 (Gentoo = Biscoe 섬 독점)
+
+---

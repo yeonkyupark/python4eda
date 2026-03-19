@@ -1,0 +1,102 @@
+# Ch.02 데이터 적재 및 기본 확인
+
+## 데이터 로드
+
+### seaborn 내장 데이터셋 사용
+
+```python
+# seaborn 내장 penguins 데이터셋 로드
+df = sns.load_dataset("penguins")
+
+# 원본 보호: 전처리 전 항상 복사본 생성
+df_raw = df.copy()
+
+print(f"데이터 로드 완료: {df.shape[0]}행 × {df.shape[1]}열")
+```
+
+> **원본 보호의 중요성**  
+> `df.copy()`로 원본을 보존하면, 전처리 과정에서 실수가 발생해도 언제든 복원이 가능합니다. 실무에서는 반드시 지켜야 할 습관입니다.
+
+### CSV 파일 로드 (실습 데이터 사용 시)
+
+```python
+# 로컬 CSV 파일 로드 예시
+# df = pd.read_csv("data.csv", encoding="utf-8")
+# df = pd.read_csv("data.csv", encoding="cp949")  # 한글 깨짐 시
+
+# 인터넷 URL에서 직접 로드
+# df = pd.read_csv("https://example.com/data.csv")
+```
+
+---
+
+## 기본 탐색 함수
+
+데이터를 처음 확인할 때 반드시 실행해야 하는 기본 탐색 코드입니다.
+
+### 상위/하위 데이터 확인
+
+```python
+print("── 상위 5행 ─────────────────")
+print(df.head())
+
+print("\n── 하위 5행 ─────────────────")
+print(df.tail())
+
+# 랜덤 샘플 확인 (편향 없는 탐색)
+print("\n── 랜덤 5행 ─────────────────")
+print(df.sample(5, random_state=42))
+```
+
+### 데이터 구조 확인
+
+```python
+# 행/열 크기
+print("데이터 크기:", df.shape)              # (344, 7)
+
+# 컬럼 목록
+print("컬럼 목록:", df.columns.tolist())
+
+# 컬럼별 데이터 타입
+print("\n데이터 타입:")
+print(df.dtypes)
+
+# 전체 정보 (결측치 포함)
+print("\n── info() ───────────────────")
+df.info()
+```
+
+### 기술 통계 요약
+
+```python
+# 수치형 변수: 평균, 표준편차, 분위수 등
+print("── 수치형 요약 ──────────────")
+print(df.describe().T)   # .T 로 전치하면 보기 편함
+
+# 범주형 포함 전체 요약
+print("\n── 전체 요약 (범주형 포함) ──")
+print(df.describe(include='all'))
+```
+
+> **describe() 읽는 법**  
+> - **count**: 결측치 제외 개수 → 344와 다르면 결측치 존재  
+> - **std**: 표준편차가 크면 분산이 넓음  
+> - **min/max**: 이상치 가능성 확인  
+> - **50%**: 중앙값 (mean과 크게 차이 나면 왜도 존재)
+
+### 초기 데이터 상태 빠른 점검
+
+```python
+# 결측치 개수
+print("결측치 현황:")
+print(df.isnull().sum())
+
+# 중복 데이터 수
+print(f"\n중복 데이터 수: {df.duplicated().sum()}")
+
+# 범주형 변수의 고유값
+for col in ["species", "island", "sex"]:
+    print(f"{col}: {df[col].unique()}")
+```
+
+---

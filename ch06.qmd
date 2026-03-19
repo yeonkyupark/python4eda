@@ -1,0 +1,111 @@
+# Ch.06 다변량 분석 (Multivariate)
+
+여러 변수를 동시에 고려한 차원 축소 및 특성 공학을 다룹니다.
+
+## PCA (주성분 분석)
+
+**PCA(Principal Component Analysis)** 는 고차원 데이터를 저차원으로 압축하는 기법입니다. 변수 간 상관관계를 제거하고, 데이터의 분산을 최대한 보존하는 새로운 축(주성분)을 만들어냅니다.
+
+**PCA 수행 절차:**
+1. 결측치 제거 + 수치형 데이터 선택
+2. 표준화 (StandardScaler) — 스케일 차이 제거
+3. PCA 수행 및 설명 분산 확인
+4. 2D 시각화로 군집 구조 확인
+
+### PCA 전처리
+
+```python
+from sklearn.preprocessing import StandardScaler
+from sklearn.decomposition import PCA
+
+numeric_cols = ["bill_length_mm", "bill_depth_mm", "flipper_length_mm", "body_mass_g"]
+
+# 결측치 없는 행만 선택
+df_pca = df[numeric_cols + ["species"]].dropna()
+X = df_pca[numeric_cols]
+y = df_pca["species"]
+
+# 표준화 (평균=0, 표준편차=1)
+scaler = StandardScaler()
+X_scaled = scaler.fit_transform(X)
+
+print(f"PCA 입력 데이터: {X_scaled.shape}")
+```
+
+### PCA 수행 및 시각화
+
+```python
+# PCA 수행 (2개 주성분)
+pca = PCA(n_components=2)
+X_pca = pca.fit_transform(X_scaled)
+
+# 설명된 분산 비율
+explained = pca.explained_variance_ratio_
+print(f"PC1 설명 분산: {explained[0]:.1%}")
+print(f"PC2 설명 분산: {explained[1]:.1%}")
+print(f"누적 설명 분산: {sum(explained):.1%}")
+
+# 시각화
+plt.figure(figsize=(8, 6))
+sns.scatterplot(x=X_pca[:, 0], y=X_pca[:, 1],
+                hue=y, palette="Set2", alpha=0.8, s=60)
+plt.xlabel(f"PC1 ({explained[0]:.1%})")
+plt.ylabel(f"PC2 ({explained[1]:.1%})")
+plt.title("PCA 결과 — 종별 군집 구조")
+plt.tight_layout()
+plt.show()
+```
+
+### 주성분 기여도 해석 (선택)
+
+```python
+# 어떤 원래 변수가 각 주성분에 얼마나 기여하는지 확인
+loadings = pd.DataFrame(
+    pca.components_.T,
+    index=numeric_cols,
+    columns=["PC1", "PC2"]
+).round(3)
+
+print("주성분 기여도:")
+print(loadings)
+```
+
+---
+
+## 특성 공학 (Feature Engineering)
+
+기존 변수를 조합하여 **새로운 의미 있는 변수(파생 변수)** 를 만드는 과정입니다. 도메인 지식이 중요합니다.
+
+```python
+# 부리 비율 (길이/깊이) — 부리 모양 표현
+df["bill_ratio"] = df["bill_length_mm"] / df["bill_depth_mm"]
+
+# 체형 지수 (체중 / 지느러미 길이) — 상대적 크기
+df["body_index"] = df["body_mass_g"] / df["flipper_length_mm"]
+
+# 파생 변수 효과 확인
+fig, axes = plt.subplots(1, 2, figsize=(14, 5))
+
+sns.boxplot(data=df, x="species", y="bill_ratio",
+            palette="Set2", ax=axes[0])
+axes[0].set_title("종별 부리 비율 (bill_ratio)\n→ 종 구분 능력 확인")
+
+sns.boxplot(data=df, x="species", y="body_index",
+            palette="Set2", ax=axes[1])
+axes[1].set_title("종별 체형 지수 (body_index)")
+
+plt.tight_layout()
+plt.show()
+```
+
+> **파생 변수의 유용성**  
+> `bill_ratio`(부리 비율)는 원래 두 변수보다 종 구분 능력이 더 뛰어납니다.  
+> 이처럼 변수 조합이 단일 변수보다 강력한 경우가 많습니다.
+
+> **Ch.06 핵심 인사이트**
+> - PCA 2개 성분으로 전체 분산의 약 88% 이상 설명 → 데이터가 저차원 구조임을 확인
+> - flipper_length ↔ body_mass 중복 정보 많음 → 변수 선택 시 참고
+> - 파생 변수 `bill_ratio`는 종 분류에 단일 변수보다 효과적
+> - PCA 군집 시각화에서 3종 완전 분리 확인 → 선형 모델로도 높은 정확도 기대 가능
+
+---
