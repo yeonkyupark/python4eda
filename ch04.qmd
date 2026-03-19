@@ -37,7 +37,7 @@ for col in ["species", "island", "sex"]:
 ### Count Plot
 
 ```{python}
-fig, axes = plt.subplots(3, 1, figsize=(24, 5))
+fig, axes = plt.subplots(3, 1, figsize=(7, 15))
 
 cat_cols = ["species", "island", "sex"]
 for ax, col in zip(axes, cat_cols):
@@ -56,7 +56,6 @@ plt.show()
 ### 섬별 종 분포 비교 (hue 옵션)
 
 ```{python}
-plt.figure(figsize=(8, 5))
 sns.countplot(data=df, x="island", hue="species", palette="Set2")
 plt.title("섬별 종 분포")
 plt.legend(title="species")
@@ -77,7 +76,7 @@ print(df[numeric_cols].describe().T)   # .T 로 전치하면 보기 편함
 ### 히스토그램 + KDE
 
 ```{python}
-fig, axes = plt.subplots(2, 2, figsize=(8, 5))
+fig, axes = plt.subplots(2, 2, figsize=(7, 5))
 axes = axes.flatten()
 
 for i, col in enumerate(numeric_cols):
@@ -106,7 +105,7 @@ for col in numeric_cols:
     print(f"{col:<22} {skew:>8.3f} {kurt:>8.3f} {flag}")
 ```
 
-> **Ch.04 핵심 인사이트**
-> - species 불균형 존재 → 이후 모델 학습 시 class imbalance 고려 필요
-> - 수치형 변수 대부분 **다봉형 분포** → 종(species)별 특성 차이 때문
-> - 단변량 분석에서 "종에 따라 값이 달라진다"는 핵심 직관 확보
+> **Ch.04 핵심 인사이트**  
+> - species 불균형 존재 → 이후 모델 학습 시 class imbalance 고려 필요  
+> - 수치형 변수 대부분 **다봉형 분포** → 종(species)별 특성 차이 때문  
+> - 단변량 분석에서 "종에 따라 값이 달라진다"는 핵심 직관 확보  
