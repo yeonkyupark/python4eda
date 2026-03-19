@@ -12,13 +12,14 @@ import seaborn as sns
 
 df = sns.load_dataset('penguins')
 ```
-
+  
 
 적재된 데이터셋 상위 5개를 살펴 본다.
 
 ```{python}
 df.head()
 ```
+
 
 
 적재된 데이터셋 하위 5개를 살펴 본다.
