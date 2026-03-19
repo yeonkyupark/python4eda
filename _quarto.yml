@@ -28,6 +28,9 @@ format:
     theme:
       - cosmo
       - brand
+    css: styles.css
+    mermaid:
+      theme: neutral
       
 toc: true
 toc-depth: 4
