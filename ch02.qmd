@@ -5,18 +5,9 @@
 ### seaborn 내장 데이터셋 사용
 
 ```{python}
-import pandas as pd
-import numpy as np
-import matplotlib.pyplot as plt
-import seaborn as sns
-
-# seaborn 내장 penguins 데이터셋 로드
-df = sns.load_dataset("penguins")
-
-# 원본 보호: 전처리 전 항상 복사본 생성
-df_raw = df.copy()
-
-print(f"데이터 로드 완료: {df.shape[0]}행 × {df.shape[1]}열")
+# 초기화 함수 실행
+from setup import setup_all 
+df = setup_all(get_font())
 ```
 
 > **원본 보호의 중요성**  
