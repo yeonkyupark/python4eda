@@ -17,6 +17,18 @@ import seaborn as sns
 
 df = sns.load_dataset("penguins")
 df_raw = df.copy()
+
+# ─────────────────────────────────────────────
+# 시각화 스타일 설정
+sns.set(style="whitegrid")
+
+# 한글 폰트 설정 (OS별 선택)
+plt.rcParams['font.family'] = 'Malgun Gothic'   # Windows
+# plt.rcParams['font.family'] = 'AppleGothic'  # macOS
+# plt.rcParams['font.family'] = 'NanumGothic'  # Linux
+
+# 마이너스 기호 깨짐 방지
+plt.rcParams['axes.unicode_minus'] = False
 ```
 
 ```{python}
