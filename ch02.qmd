@@ -98,5 +98,3 @@ print(f"\n중복 데이터 수: {df.duplicated().sum()}")
 for col in ["species", "island", "sex"]:
     print(f"{col}: {df[col].unique()}")
 ```
-
----

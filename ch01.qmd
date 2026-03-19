@@ -41,5 +41,3 @@ print("라이브러리 로드 완료")
 
 > **Jupyter 매직 커맨드**  
 > Jupyter Notebook에서는 `%matplotlib inline`을 상단에 추가하면 셀 내부에 그래프가 바로 출력됩니다.
-
----

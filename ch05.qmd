@@ -142,5 +142,3 @@ plt.show()
 > - **flipper_length ↔ body_mass** 강한 양의 상관관계 존재 (r≈0.87)
 > - **bill_length ↔ bill_depth**는 전체적으로 약한 음의 상관 → 종별로 나누면 역전 (심슨의 역설)
 > - island 변수만으로도 species를 예측 가능한 구조 (Gentoo = Biscoe 섬 독점)
-
----
