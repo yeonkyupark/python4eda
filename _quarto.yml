@@ -29,8 +29,6 @@ book:
     - ch06.qmd
     - ch07.qmd
 
-number-sections: true
-
 format:
   html:
     theme:
