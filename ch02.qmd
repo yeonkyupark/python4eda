@@ -6,7 +6,7 @@
 
 ```{python}
 # 초기화 함수 실행
-from setup import setup_all 
+from setup import setup_all, get_font 
 df = setup_all(get_font())
 ```
 
