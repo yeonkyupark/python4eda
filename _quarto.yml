@@ -7,16 +7,43 @@ book:
   repo-url: https://github.com/yeonkyupark/python4eda 
   repo-branch: main
   repo-actions: [edit]
+  favicon: logo.png
+  page-footer: 
+    left: "Copyright(c) 2026 YK" 
+    right: "Python for Data Analytics"
+  sidebar: 
+    tools:
+      - icon: instagram
+        href: https://www.instagram.com/yeonkyu.park/
+      - icon: globe
+        href: https://yeonkyupark.github.io/
+    collapse-level: 1
   chapters:
     - index.qmd
+
+number-sections: true
 
 format:
   html:
     theme:
       - cosmo
       - brand
+      
+toc: true
+toc-depth: 4
+toc-title: 목차
+
+language:
+  crossref-apx-prefix: 참고자료
+  section-title-appendices: 참고자료
+
+crossref:
+  appendix-title: "참고자료"
+  appendix-delim: ":"
 
 execute:
   freeze: auto
+  warning: false
+  message: false
 
 jupyter: python3
