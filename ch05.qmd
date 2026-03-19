@@ -13,7 +13,10 @@
 ### Boxplot — 그룹별 분포 비교
 ```{python}
 # 초기화 함수 실행
+import numpy as np
+import pandas as pd
 from setup import setup_all
+
 df = setup_all()
 ```
 

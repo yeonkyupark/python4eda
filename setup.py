@@ -25,8 +25,6 @@ def initialize_environment(font="Malgun Gothic"):
 
 # 데이터 적재
 def load_penguins():
-    import numpy as np
-    import pandas as pd
     import seaborn as sns
     df = sns.load_dataset("penguins")
     return df
