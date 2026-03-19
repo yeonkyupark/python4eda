@@ -14,7 +14,7 @@
 
 ### PCA 전처리
 
-```python
+```{python}
 from sklearn.preprocessing import StandardScaler
 from sklearn.decomposition import PCA
 
@@ -34,7 +34,7 @@ print(f"PCA 입력 데이터: {X_scaled.shape}")
 
 ### PCA 수행 및 시각화
 
-```python
+```{python}
 # PCA 수행 (2개 주성분)
 pca = PCA(n_components=2)
 X_pca = pca.fit_transform(X_scaled)
@@ -58,7 +58,7 @@ plt.show()
 
 ### 주성분 기여도 해석 (선택)
 
-```python
+```{python}
 # 어떤 원래 변수가 각 주성분에 얼마나 기여하는지 확인
 loadings = pd.DataFrame(
     pca.components_.T,
@@ -76,7 +76,7 @@ print(loadings)
 
 기존 변수를 조합하여 **새로운 의미 있는 변수(파생 변수)** 를 만드는 과정입니다. 도메인 지식이 중요합니다.
 
-```python
+```{python}
 # 부리 비율 (길이/깊이) — 부리 모양 표현
 df["bill_ratio"] = df["bill_length_mm"] / df["bill_depth_mm"]
 

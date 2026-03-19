@@ -12,7 +12,7 @@
 
 ### Boxplot — 그룹별 분포 비교
 
-```python
+```{python}
 fig, axes = plt.subplots(1, 2, figsize=(14, 5))
 
 # 종별 부리 길이
@@ -31,7 +31,7 @@ plt.show()
 
 ### Violin Plot — 분포 형태까지 파악
 
-```python
+```{python}
 plt.figure(figsize=(8, 5))
 sns.violinplot(data=df, x="species", y="flipper_length_mm",
                palette="muted", inner="box")
@@ -43,7 +43,7 @@ plt.show()
 
 ### 그룹별 평균 비교
 
-```python
+```{python}
 # 종별 수치형 변수 평균 비교
 group_stats = df.groupby("species")[numeric_cols].agg(["mean", "std"]).round(2)
 print(group_stats)
@@ -55,7 +55,7 @@ print(group_stats)
 
 ### Scatter Plot — 두 변수의 관계
 
-```python
+```{python}
 fig, axes = plt.subplots(1, 2, figsize=(14, 5))
 
 # 부리 길이 vs 깊이 (종별 색상)
@@ -74,7 +74,7 @@ plt.show()
 
 ### 상관관계 분석 & Heatmap
 
-```python
+```{python}
 # 피어슨 상관계수
 corr = df[numeric_cols].corr()
 print(corr.round(3))
@@ -98,7 +98,7 @@ plt.show()
 
 ## 범주형 × 범주형 분석
 
-```python
+```{python}
 # 교차표 (빈도)
 ct = pd.crosstab(df["species"], df["island"])
 print("── 빈도 교차표 ──────────────")
@@ -127,7 +127,7 @@ plt.show()
 
 ## Pairplot — 전체 이변량 관계 한 눈에
 
-```python
+```{python}
 # 모든 수치형 변수 쌍의 관계를 한 번에 시각화
 # 데이터 크기에 따라 시간이 걸릴 수 있음
 sns.pairplot(df, hue="species", palette="Set2",

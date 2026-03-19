@@ -8,7 +8,7 @@
 
 ### 빈도 분석
 
-```python
+```{python}
 # 절대 빈도
 print("── species 분포 ─────────────")
 print(df["species"].value_counts())
@@ -25,7 +25,7 @@ for col in ["species", "island", "sex"]:
 
 ### Count Plot
 
-```python
+```{python}
 fig, axes = plt.subplots(1, 3, figsize=(14, 4))
 
 cat_cols = ["species", "island", "sex"]
@@ -44,7 +44,7 @@ plt.show()
 
 ### 섬별 종 분포 비교 (hue 옵션)
 
-```python
+```{python}
 plt.figure(figsize=(8, 4))
 sns.countplot(data=df, x="island", hue="species", palette="Set2")
 plt.title("섬별 종 분포")
@@ -58,14 +58,14 @@ plt.show()
 
 ### 기술 통계
 
-```python
+```{python}
 numeric_cols = ["bill_length_mm", "bill_depth_mm", "flipper_length_mm", "body_mass_g"]
 print(df[numeric_cols].describe().T)   # .T 로 전치하면 보기 편함
 ```
 
 ### 히스토그램 + KDE
 
-```python
+```{python}
 fig, axes = plt.subplots(2, 2, figsize=(12, 8))
 axes = axes.flatten()
 
@@ -85,7 +85,7 @@ plt.show()
 > - **왜도**: 0이면 대칭, +이면 오른쪽 꼬리(양의 왜도), -이면 왼쪽 꼬리. |왜도| > 1이면 변환 고려  
 > - **첨도**: 0이면 정규분포, +이면 뾰족(이상치 가능), -이면 평평한 분포
 
-```python
+```{python}
 print(f"{'컬럼':<22} {'왜도':>8} {'첨도':>8}")
 print("-" * 40)
 for col in numeric_cols:

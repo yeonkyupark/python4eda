@@ -6,7 +6,7 @@
 
 ### 결측치 현황 정량화
 
-```python
+```{python}
 # 컬럼별 결측치 개수 및 비율
 missing_count = df.isnull().sum()
 missing_ratio = (df.isnull().sum() / len(df)) * 100
@@ -22,7 +22,7 @@ print(missing_df[missing_df["결측 개수"] > 0])
 
 ### 결측치 시각화
 
-```python
+```{python}
 # 히트맵: 밝은 색 = 결측치
 plt.figure(figsize=(8, 4))
 sns.heatmap(df.isnull(), cbar=False, yticklabels=False)
@@ -41,7 +41,7 @@ plt.show()
 | 통계값 대체 | 수치형(평균/중앙값), 범주형(최빈값) | `fillna()` |
 | 그룹 기반 대체 | 그룹별 특성이 다를 때 (가장 정확) | `groupby().transform()` |
 
-```python
+```{python}
 # 단순 제거
 df_drop = df.dropna()
 print(f"제거 전: {df.shape} → 제거 후: {df_drop.shape}")
@@ -68,7 +68,7 @@ df_group["bill_length_mm"] = df.groupby("species")["bill_length_mm"]\
 
 ### Boxplot으로 이상치 시각화
 
-```python
+```{python}
 numeric_cols = ["bill_length_mm", "bill_depth_mm", "flipper_length_mm", "body_mass_g"]
 
 plt.figure(figsize=(12, 6))
@@ -89,7 +89,7 @@ plt.show()
 
 ### IQR 기반 이상치 탐지 함수
 
-```python
+```{python}
 def detect_outliers_iqr(data, column):
     """IQR 방법으로 이상치를 탐지하는 함수"""
     Q1 = data[column].quantile(0.25)
@@ -116,7 +116,7 @@ for col in numeric_cols:
 | 클리핑 | 경계값으로 제한 | 데이터 손실 없음, 실무에서 많이 사용 |
 | 변환 | log 변환으로 왜도 보정 | 해석이 복잡해짐 |
 
-```python
+```{python}
 # 제거
 def remove_outliers_iqr(data, column):
     Q1 = data[column].quantile(0.25)
@@ -141,7 +141,7 @@ for col in numeric_cols:
 
 ## 데이터 타입 변환 및 중복 제거
 
-```python
+```{python}
 # ── 범주형 변환 (메모리 절약 + 분석 편의)
 for col in ["species", "island", "sex"]:
     df[col] = df[col].astype("category")
