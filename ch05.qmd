@@ -23,7 +23,7 @@ df = setup_all()
 ```
 
 ```{python}
-fig, axes = plt.subplots(2, 1, figsize=(7, 10))
+fig, axes = plt.subplots(2, 1, figsize=(8, 12))
 
 # 종별 부리 길이
 sns.boxplot(data=df, x="species", y="bill_length_mm",
@@ -67,7 +67,7 @@ print(group_stats)
 ### Scatter Plot — 두 변수의 관계
 
 ```{python}
-fig, axes = plt.subplots(2, 1, figsize=(7, 10))
+fig, axes = plt.subplots(2, 1, figsize=(8, 12))
 
 # 부리 길이 vs 깊이 (종별 색상)
 sns.scatterplot(data=df, x="bill_length_mm", y="bill_depth_mm",
@@ -79,6 +79,7 @@ sns.scatterplot(data=df, x="flipper_length_mm", y="body_mass_g",
                 hue="species", ax=axes[1], palette="Set2", alpha=0.8)
 axes[1].set_title("지느러미 길이 vs 체중 (종별)")
 
+plt.tight_layout()
 plt.show()
 ```
 
@@ -90,12 +91,14 @@ corr = df[numeric_cols].corr()
 print(corr.round(3))
 
 # 히트맵 시각화
-plt.figure(figsize=(7, 5))
+plt.figure(figsize=(8, 6))
 mask = np.triu(np.ones_like(corr, dtype=bool))  # 상삼각 마스크 (중복 제거)
 sns.heatmap(corr, annot=True, fmt=".2f", cmap="coolwarm",
             mask=mask, vmin=-1, vmax=1,
             square=True, linewidths=0.5)
 plt.title("수치형 변수 간 상관관계")
+
+plt.tight_layout()
 plt.show()
 ```
 
@@ -119,7 +122,7 @@ print("\n── 비율 교차표 (행 기준) ─────")
 print(ct_ratio.round(3))
 
 # 시각화
-fig, axes = plt.subplots(2, 1, figsize=(7, 10))
+fig, axes = plt.subplots(2, 1, figsize=(8, 12))
 
 ct.plot(kind="bar", stacked=True, ax=axes[0], colormap="Set2")
 axes[0].set_title("Species × Island (누적 막대)")
@@ -128,6 +131,7 @@ axes[0].set_xticklabels(axes[0].get_xticklabels(), rotation=0)
 sns.heatmap(ct, annot=True, fmt="d", cmap="Blues", ax=axes[1])
 axes[1].set_title("Species × Island (히트맵)")
 
+plt.tight_layout()
 plt.show()
 ```
 
@@ -136,8 +140,7 @@ plt.show()
 ## Pairplot — 전체 이변량 관계 한 눈에
 
 ```{python}
-# 모든 수치형 변수 쌍의 관계를 한 번에 시각화
-# 데이터 크기에 따라 시간이 걸릴 수 있음
+# 모든 수치형 변수 쌍의 관계를 한 번에 시각화 데이터 크기에 따라 시간이 걸릴 수 있음
 g = sns.pairplot(
     df,
     hue="species",
@@ -149,13 +152,17 @@ g = sns.pairplot(
 g.fig.suptitle("Pairplot (종별 색상)", y=1.02)
 
 # legend 재구성
+if g._legend is not None:
+    g._legend.remove()
+    
 g.add_legend(
     title="species",
     bbox_to_anchor=(0.5, -0.02),
     loc="upper center",
-    ncol=3  # 🔥 가로 정렬
+    ncol=3
 )
 
+plt.tight_layout()
 plt.show()
 ```
 
