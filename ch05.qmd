@@ -118,7 +118,7 @@ print("\n── 비율 교차표 (행 기준) ─────")
 print(ct_ratio.round(3))
 
 # 시각화
-fig, axes = plt.subplots(2, 1, figsize=(8, 10))
+fig, axes = plt.subplots(2, 1, figsize=(7, 10))
 
 ct.plot(kind="bar", stacked=True, ax=axes[0], colormap="Set2")
 axes[0].set_title("Species × Island (누적 막대)")
@@ -137,18 +137,24 @@ plt.show()
 ```{python}
 # 모든 수치형 변수 쌍의 관계를 한 번에 시각화
 # 데이터 크기에 따라 시간이 걸릴 수 있음
-plt.figure(figsize=(7,8))
+g = sns.pairplot(
+    df,
+    hue="species",
+    palette="Set2",
+    diag_kind="kde",
+    plot_kws={"alpha": 0.6}
+)
 
-g = sns.pairplot(df, hue="species", palette="Set2",
-             diag_kind="kde",       # 대각선: KDE 밀도
-             plot_kws={"alpha": 0.6})
 g.fig.suptitle("Pairplot (종별 색상)", y=1.02)
+
+# legend 재구성
 g.add_legend(
     title="species",
     bbox_to_anchor=(0.5, -0.02),
     loc="upper center",
-    ncol=3
+    ncol=3  # 🔥 가로 정렬
 )
+
 plt.show()
 ```
 
