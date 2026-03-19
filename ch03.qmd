@@ -35,7 +35,6 @@ print(missing_df[missing_df["결측 개수"] > 0])
 
 ```{python}
 # 히트맵: 밝은 색 = 결측치
-plt.figure(figsize=(8, 5))
 sns.heatmap(df.isnull(), cbar=False, yticklabels=False)
 plt.title("결측치 분포 (밝은 색 = NaN)")
 plt.tight_layout()
