@@ -30,6 +30,9 @@ jobs:
         run: |
           uv sync
           uv run python -m ipykernel install --user --name python3
+          
+      - name: Install fonts
+        run: sudo apt-get install -y fonts-nanum
 
       - name: Setup Quarto
         uses: quarto-dev/quarto-actions/setup@v2

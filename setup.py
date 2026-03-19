@@ -10,7 +10,7 @@ def get_font():
     else:
         return "NanumGothic"
 
-def initialize_environment(font="Malgun Gothic"):
+def initialize_environment(font="NanumGothic"):
     import seaborn as sns
     import matplotlib.pyplot as plt
     
