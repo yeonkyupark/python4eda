@@ -147,7 +147,7 @@ g = sns.pairplot(
     diag_kind="kde",
     plot_kws={"alpha": 0.6}
 )
-g.fig.set_size_inches(7, 8)
+g.fig.set_size_inches(4, 5)
 g.fig.suptitle("Pairplot (종별 색상)", y=1.02)
 
 # legend 재구성
