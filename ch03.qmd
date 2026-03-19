@@ -81,11 +81,19 @@ df_group["bill_length_mm"] = df.groupby("species")["bill_length_mm"]\
 ```{python}
 numeric_cols = ["bill_length_mm", "bill_depth_mm", "flipper_length_mm", "body_mass_g"]
 
-for i, col in enumerate(numeric_cols):
-    sns.boxplot(x=df[col], color="skyblue")
-    plt.title(f"{col}\n(박스 바깥 = 이상치 후보)")
-    plt.tight_layout()
-    plt.show()
+# for i, col in enumerate(numeric_cols):
+#     sns.boxplot(x=df[col], color="skyblue")
+#     plt.title(f"{col}\n(박스 바깥 = 이상치 후보)")
+#     plt.tight_layout()
+#     plt.show()
+
+fig, axes = plt.subplots(2, 2, figsize=(8, 6))
+for ax, col in zip(axes.flatten(), numeric_cols):
+    sns.boxplot(x=df[col], ax=ax, color="skyblue")
+    ax.set_title(f"{col}\n(박스 바깥 = 이상치 후보)")
+
+plt.tight_layout()
+plt.show()
 ```
 
 > **IQR 방식 이해**  
