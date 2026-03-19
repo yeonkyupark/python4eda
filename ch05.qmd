@@ -55,6 +55,7 @@ plt.show()
 
 ```{python}
 # 종별 수치형 변수 평균 비교
+numeric_cols = ["bill_length_mm", "bill_depth_mm", "flipper_length_mm", "body_mass_g"]
 group_stats = df.groupby("species")[numeric_cols].agg(["mean", "std"]).round(2)
 print(group_stats)
 ```
