@@ -23,7 +23,7 @@ df = setup_all()
 ```
 
 ```{python}
-fig, axes = plt.subplots(2, 1, figsize=(8, 15))
+fig, axes = plt.subplots(2, 1, figsize=(8, 10))
 
 # 종별 부리 길이
 sns.boxplot(data=df, x="species", y="bill_length_mm",
@@ -67,7 +67,7 @@ print(group_stats)
 ### Scatter Plot — 두 변수의 관계
 
 ```{python}
-fig, axes = plt.subplots(2, 1, figsize=(8, 15))
+fig, axes = plt.subplots(2, 1, figsize=(8, 10))
 
 # 부리 길이 vs 깊이 (종별 색상)
 sns.scatterplot(data=df, x="bill_length_mm", y="bill_depth_mm",
@@ -121,7 +121,7 @@ print("\n── 비율 교차표 (행 기준) ─────")
 print(ct_ratio.round(3))
 
 # 시각화
-fig, axes = plt.subplots(2, 1, figsize=(8, 15))
+fig, axes = plt.subplots(2, 1, figsize=(8, 10))
 
 ct.plot(kind="bar", stacked=True, ax=axes[0], colormap="Set2")
 axes[0].set_title("Species × Island (누적 막대)")
