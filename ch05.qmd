@@ -35,7 +35,6 @@ sns.boxplot(data=df, x="sex", y="body_mass_g",
             hue="species", palette="Set1", ax=axes[1])
 axes[1].set_title("성별·종별 체중 분포")
 
-plt.tight_layout()
 plt.show()
 ```
 
@@ -79,7 +78,6 @@ sns.scatterplot(data=df, x="flipper_length_mm", y="body_mass_g",
                 hue="species", ax=axes[1], palette="Set2", alpha=0.8)
 axes[1].set_title("지느러미 길이 vs 체중 (종별)")
 
-plt.tight_layout()
 plt.show()
 ```
 
@@ -97,7 +95,6 @@ sns.heatmap(corr, annot=True, fmt=".2f", cmap="coolwarm",
             mask=mask, vmin=-1, vmax=1,
             square=True, linewidths=0.5)
 plt.title("수치형 변수 간 상관관계")
-plt.tight_layout()
 plt.show()
 ```
 
@@ -130,7 +127,6 @@ axes[0].set_xticklabels(axes[0].get_xticklabels(), rotation=0)
 sns.heatmap(ct, annot=True, fmt="d", cmap="Blues", ax=axes[1])
 axes[1].set_title("Species × Island (히트맵)")
 
-plt.tight_layout()
 plt.show()
 ```
 
