@@ -18,6 +18,8 @@
 # 초기화 함수 실행
 import numpy as np
 import pandas as pd
+import seaborn as sns
+import matplotlib.pyplot as plt
 from setup import setup_all
 
 df = setup_all()
