@@ -87,7 +87,7 @@ numeric_cols = ["bill_length_mm", "bill_depth_mm", "flipper_length_mm", "body_ma
 #     plt.tight_layout()
 #     plt.show()
 
-fig, axes = plt.subplots(2, 2, figsize=(8, 6))
+fig, axes = plt.subplots(2, 2, figsize=(7, 5))
 for ax, col in zip(axes.flatten(), numeric_cols):
     sns.boxplot(x=df[col], ax=ax, color="skyblue")
     ax.set_title(f"{col}\n(박스 바깥 = 이상치 후보)")
